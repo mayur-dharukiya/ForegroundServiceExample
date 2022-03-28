@@ -1,14 +1,14 @@
 package com.revature.foregroundserviceexample.services
 
-import android.app.Notification
-import android.app.NotificationChannel
-import android.app.NotificationManager
-import android.app.Service
+import android.app.*
 import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.IBinder
 import android.util.Log
+import android.widget.Toast
+import androidx.core.app.NotificationCompat
+import com.revature.foregroundserviceexample.R
 
 //foreground service
 
@@ -25,18 +25,30 @@ class MyService: Service()
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-
+     val command= intent?.getStringExtra(INTENT_COMMAND)
+       if(command=="Stop")
+       {
+           stopService()
+           return START_NOT_STICKY
+       }
 
         showNotification()
+
+        if(command=="Reply")
+        {
+            Toast.makeText(this,"CLicked in the NOtification",Toast.LENGTH_LONG).show()
+        }
+
+        return START_NOT_STICKY
         //return super.onStartCommand(intent, flags, startId)
     }
 
-    override fun stopService(name: Intent?): Boolean {
-        return super.stopService(name)
-    }
+
 
     private fun stopService()
     {
+        stopForeground(true)
+
         stopSelf()
     }
 
@@ -47,6 +59,12 @@ class MyService: Service()
     private fun showNotification()
     {
         val manager=getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        val replyIntent=Intent(this,MyService::class.java).apply {
+
+            putExtra(INTENT_COMMAND, "Reply")
+        }
+        val replyPendingIntent=PendingIntent.getService(this,2,replyIntent,0)
 
         if (Build.VERSION.SDK_INT>=Build.VERSION_CODES.O)
         {
@@ -72,6 +90,7 @@ class MyService: Service()
                     setDescription("Hello Description")
 
                     lockscreenVisibility= Notification.VISIBILITY_PRIVATE
+                   // this.startForeground(1,build())
                     manager.createNotificationChannel(this)
 
                 }
@@ -83,8 +102,20 @@ class MyService: Service()
             }
         }
 
-        //use the alternative code to create notification old way
+        with(
 
+            NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_GENERAL)
+        )
+        {
+
+            setContentTitle("First")
+            setContentText("Notification Text")
+            setSmallIcon(R.drawable.ic_launcher_background)
+            setContentIntent(replyPendingIntent)
+            addAction(0,"Reply",replyPendingIntent)
+            addAction(0,"Answer",replyPendingIntent)
+            startForeground(1,build())
+        }
 
 
     }

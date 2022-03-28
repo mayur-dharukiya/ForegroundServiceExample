@@ -19,6 +19,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.revature.foregroundserviceexample.services.foregroundStartService
+
 import com.revature.foregroundserviceexample.ui.theme.ForegroundServiceExampleTheme
 import com.revature.foregroundserviceexample.ui.theme.Purple500
 
@@ -56,14 +58,14 @@ class MainActivity : ComponentActivity() {
                                 verticalArrangement = Arrangement.Center
                             ) {
                                 Button(
-                                    onClick = { foregroundStartService("Start") },
+                                    onClick = { foregroundStartService("Start")},
                                     modifier = Modifier
                                         .width(100.dp)
                                         .height(45.dp)
                                         .clip(RoundedCornerShape(10.dp))
                                 ) {
                                     Text(
-                                        text = "Trigger",
+                                        text = "Start Service",
                                         color = Color.White,
                                         fontSize = 15.sp
                                     )
@@ -72,7 +74,7 @@ class MainActivity : ComponentActivity() {
 
                                 Button(
                                     onClick = {
-                                        foregroundStartService("Exit")
+                                        foregroundStartService("Stop")
                                     },
                                     modifier = Modifier
                                         .width(100.dp)
@@ -80,7 +82,7 @@ class MainActivity : ComponentActivity() {
                                         .clip(RoundedCornerShape(10.dp))
                                 ) {
                                     Text(
-                                        text = "Exit",
+                                        text = "Stop Service",
                                         color = Color.White,
                                         fontSize = 15.sp
                                     )

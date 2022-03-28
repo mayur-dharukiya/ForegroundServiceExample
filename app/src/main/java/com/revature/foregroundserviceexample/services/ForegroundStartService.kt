@@ -3,6 +3,7 @@ package com.revature.foregroundserviceexample.services
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 
 fun Context.foregroundStartService(command:String)
 {
@@ -16,15 +17,18 @@ fun Context.foregroundStartService(command:String)
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             this.startForegroundService(intent)
+            Log.d("Started","Service started")
         } else {
             this.startService(intent)
+            Log.d("Started","Service started")
         }
 
     }
-    else if(command=="Exit")
+    else if(command=="Stop")
     {
         intent.putExtra(INTENT_COMMAND,command)
         this.stopService(intent)
+        Log.d("Stopped","Service Stopped")
     }
 
 }
